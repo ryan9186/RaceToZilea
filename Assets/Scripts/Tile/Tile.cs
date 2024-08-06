@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-
-
-
 /*
  * This file, "Tile.cs" is the script used on the Tile prefab object. 
  * This Tile class represents the "physical" component of the gameboard,
@@ -28,6 +25,7 @@ using UnityEditor;
  */
 public class Tile : MonoBehaviour
 {
+    public GameHandler gameHandler;
     // This Tile piece's Sprite renderer
     public SpriteRenderer tileRenderer;
 
@@ -38,6 +36,9 @@ public class Tile : MonoBehaviour
     public TileType tileType = null;
 
     public int tileResource;
+
+    Player tileOwner = null;
+    string tileOwnerName = "Unowned";
     
     // Awake called on instantiation
     void Awake()
@@ -101,6 +102,7 @@ public class Tile : MonoBehaviour
     // selectTile() used in gameplay for a player to select a Tile piece.
     public void selectTile()
     {
+
         if(tileType is ResourceTileType)
         {
             Debug.Log("Is resource type");
@@ -108,11 +110,29 @@ public class Tile : MonoBehaviour
             Debug.Log(temp.getResourceType());
         }
         Debug.Log(this.currentTileType);
+
+        gameHandler.setSelectedTile(this);
     }
 
     // onMouseDown() to provide input functionality
     private void OnMouseDown()
     {
         selectTile();
+        Debug.Log("Tile Clicked");
+    }
+
+    public Sprite getTileSprite()
+    {
+        return this.tileType.getSprite();
+    }
+
+    public Player getTileOwner() 
+    {   
+        return this.tileOwner; 
+    }
+
+    public string getTileOwnerName()
+    {
+        return this.tileOwnerName;
     }
 }
