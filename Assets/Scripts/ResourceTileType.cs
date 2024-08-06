@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 /* TileType represents the gameplay aspects and logic for each Tile piece,
@@ -15,38 +16,32 @@ using UnityEngine;
  * 
  * TileTypes include three categories (Homebase, Resource, Generator)
 */
-public class TileType : MonoBehaviour
+public class ResourceTileType : TileType
 {
-    public Tile attachedTo = null;
-    public Sprite tileSprite = null;
-    public string typeName = null;
+    public int mobility = 2;
+    public int resourceAmt;
+    public string resourceType = null;
 
-    private void Awake()
+    void Awake()
     {
-        Debug.Log("TileType Awake called");
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        resourceAmt = GenerateResourceAmount();
+        this.tileSprite = Resources.Load<Sprite>("FlatlandsSprite");
     }
 
     //GenerateResourceAmount() used upon TileType instantiation to randomly
     // generate the amount of resources provided by this tileType
-
-    public Sprite getSprite()
+    static protected int GenerateResourceAmount()
     {
-        return this.tileSprite;
+        return Random.Range(2, 11);
     }
 
-    public string getTileType()
+    public int getResourceAmount()
     {
-        return this.typeName; 
+        return resourceAmt; 
+    }
+
+    public string getResourceType()
+    {
+        return resourceType;
     }
 }

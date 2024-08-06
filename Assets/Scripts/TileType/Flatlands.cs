@@ -5,15 +5,12 @@ using UnityEngine;
 /* Flatlands TileType is a resource type
  * Buildable generator is the Barracks variant
 */
-public class Flatlands : TileType
+public class Flatlands : ResourceTileType
 {
-	public int troops;
-	public int mobility = 2;
-
-	// Start is called before the first frame update
 	void Awake()
 	{
-		troops = GenerateResourceAmount();
+		this.resourceAmt = GenerateResourceAmount();
+		this.resourceType = "Troops";
 		this.typeName = "Flatlands";
 		this.tileSprite = Resources.Load<Sprite>("FlatlandsSprite");
 	}

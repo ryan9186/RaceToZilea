@@ -10,7 +10,7 @@ public class CameraDrag : MonoBehaviour
 
     #region Variables
 
-    private Vector3 origin;
+    [SerializeField] private Vector3 origin;
     private Vector3 difference;
 
     private Camera mainCamera;
@@ -21,7 +21,9 @@ public class CameraDrag : MonoBehaviour
 
     private void Awake()
     {
-        mainCamera = Camera.main;
+        //mainCamera = Camera.main;
+        mainCamera = GetComponent<Camera>();
+
         Debug.Log("Awake");
     }
 
@@ -30,7 +32,9 @@ public class CameraDrag : MonoBehaviour
     {
         if (ctx.started) origin = GetMousePosition;
         isDragging = ctx.started || ctx.performed;
-
+        //Debug.Log("Dragging");
+        //Debug.Log(origin);
+        //Debug.Log(difference);
     }
 
     public void LateUpdate()
@@ -39,7 +43,7 @@ public class CameraDrag : MonoBehaviour
 
         difference = GetMousePosition - transform.position;
         transform.position = origin - difference;
-        Debug.Log("LateUpdate");
+        Debug.Log(transform.position);
     }
 
     private Vector3 GetMousePosition => mainCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());

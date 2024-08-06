@@ -5,15 +5,12 @@ using UnityEngine;
 /* Flatlands Crater is a resource type
  * Buildable generator is the Fishery variant
 */
-public class Crater : TileType
+public class Crater : ResourceTileType
 {
-    public int food;
-    public int mobility = 2;
-    // Start is called before the first frame update
-
     void Awake()
     {
-        food = GenerateResourceAmount();
+        this.resourceAmt = GenerateResourceAmount();
+        this.resourceType = "Food";
         this.typeName = "Crater";
         this.tileSprite = Resources.Load<Sprite>("CraterSprite");
     }

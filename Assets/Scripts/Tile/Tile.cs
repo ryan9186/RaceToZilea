@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
+
 
 
 
@@ -22,15 +25,19 @@ using UnityEngine;
  * Tile)
  * A list of players that this Tile piece is currently visible too depending on the
  * 'visibility' gameplay mechanic
- */ 
+ */
 public class Tile : MonoBehaviour
 {
     // This Tile piece's Sprite renderer
     public SpriteRenderer tileRenderer;
+
     // Name of the TileType currently currently located on this Tile piece
     public string currentTileType = null;
+
     // TileType object currently located on this Tile piece
     public TileType tileType = null;
+
+    public int tileResource;
     
     // Awake called on instantiation
     void Awake()
@@ -52,7 +59,7 @@ public class Tile : MonoBehaviour
     {
         
         tileRenderer = GetComponent<SpriteRenderer>();
-        int tileTypeGen = Random.Range(1, 6);
+        int tileTypeGen = UnityEngine.Random.Range(1, 6);
 
         // if tree that randomly chooses a tileType for this Tile object
         if (tileTypeGen == 1)
@@ -94,12 +101,18 @@ public class Tile : MonoBehaviour
     // selectTile() used in gameplay for a player to select a Tile piece.
     public void selectTile()
     {
+        if(tileType is ResourceTileType)
+        {
+            Debug.Log("Is resource type");
+            ResourceTileType temp = (ResourceTileType)tileType;
+            Debug.Log(temp.getResourceType());
+        }
         Debug.Log(this.currentTileType);
     }
 
     // onMouseDown() to provide input functionality
     private void OnMouseDown()
     {
-        Debug.Log(this.currentTileType);
+        selectTile();
     }
 }
