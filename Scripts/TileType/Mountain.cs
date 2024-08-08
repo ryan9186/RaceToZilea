@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,18 +8,44 @@ using UnityEngine;
 */
 public class Mountain : ResourceTileType
 {
+    public int ironCost;
+    public int lithiumCost;
 
     void Awake()
     {
         this.resourceAmt = GenerateResourceAmount();
+        this.ironCost = this.resourceAmt * 2;
+        this.lithiumCost = this.resourceAmt * 2;
+
         this.resourceType = "Iron";
         this.typeName = "Mountain";
         this.tileSprite = Resources.Load<Sprite>("MountainSprite");
     }
 
-    // Update is called once per frame
-    void Update()
+    /*
+    public bool claimTile(Player player)
     {
-
+        int cost = this.resourceAmt * 2;
+        if (player.iron > cost && player.lithium > cost)
+        {
+            player.iron -= cost;
+            player.lithium -= cost;
+            return true;
+        }
+        else
+            return false;
+    }
+    */
+    public bool checkCanBuild()
+    {
+        Player currentPlayer = this.attachedTo.gameHandler.getCurrentPlayer();
+        if (currentPlayer.iron >= this.ironCost && currentPlayer.lithium >= this.lithiumCost)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
