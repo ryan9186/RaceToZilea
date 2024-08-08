@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-
-
-
 /*
  * This file, "Tile.cs" is the script used on the Tile prefab object. 
  * This Tile class represents the "physical" component of the gameboard,
@@ -28,6 +25,7 @@ using UnityEditor;
  */
 public class Tile : MonoBehaviour
 {
+    public GameHandler gameHandler;
     // This Tile piece's Sprite renderer
     public SpriteRenderer tileRenderer;
 
@@ -38,6 +36,12 @@ public class Tile : MonoBehaviour
     public TileType tileType = null;
 
     public int tileResource;
+
+    public Rover roverOn;
+    public Player tileOwner = null;
+    public string tileOwnerName = "Unowned";
+
+    public bool isResource;
     
     // Awake called on instantiation
     void Awake()
@@ -61,31 +65,52 @@ public class Tile : MonoBehaviour
         tileRenderer = GetComponent<SpriteRenderer>();
         int tileTypeGen = UnityEngine.Random.Range(1, 6);
 
+        Vector3 corner1 = new Vector3(0, 0, 0);
+        Vector3 corner2 = new Vector3(4.8f, 0, 0);
+        Vector3 corner3 = new Vector3(5.4f, 7.274611f, 0);
+        Vector3 corner4 = new Vector4(0.6f, 7.274611f, 0);
+        Vector3 thisTileLoc = this.transform.position;
+
+        if (corner1 == thisTileLoc || corner2 == thisTileLoc || corner3 == thisTileLoc || corner4 == thisTileLoc)
+        {
+            this.tileType = gameObject.AddComponent<HomeBase>();
+            this.tileType.attachedTo = this;
+            isResource = false;
+            gameHandler.homeBaseTiles.Add(this);
+        }
         // if tree that randomly chooses a tileType for this Tile object
-        if (tileTypeGen == 1)
+        else
         {
-            this.tileType = gameObject.AddComponent<Mountain>();
-            this.tileType.attachedTo = this;
-        }
-        else if (tileTypeGen == 2)
-        {
-            this.tileType = gameObject.AddComponent<Crater>();
-            this.tileType.attachedTo = this;
-        }
-        else if (tileTypeGen == 3)
-        {
-            this.tileType = gameObject.AddComponent<Ravine>();
-            this.tileType.attachedTo = this;
-        }
-        else if (tileTypeGen == 4)
-        {
-            this.tileType = gameObject.AddComponent<Fissure>();
-            this.tileType.attachedTo = this;
-        }
-        else if (tileTypeGen == 5)
-        {
-            this.tileType = gameObject.AddComponent<Flatlands>();
-            this.tileType.attachedTo = this;
+            if (tileTypeGen == 1)
+            {
+                this.tileType = gameObject.AddComponent<Mountain>();
+                this.tileType.attachedTo = this;
+                isResource = true;
+            }
+            else if (tileTypeGen == 2)
+            {
+                this.tileType = gameObject.AddComponent<Crater>();
+                this.tileType.attachedTo = this;
+                isResource = true;
+            }
+            else if (tileTypeGen == 3)
+            {
+                this.tileType = gameObject.AddComponent<Ravine>();
+                this.tileType.attachedTo = this;
+                isResource = true;
+            }
+            else if (tileTypeGen == 4)
+            {
+                this.tileType = gameObject.AddComponent<Fissure>();
+                this.tileType.attachedTo = this;
+                isResource = true;
+            }
+            else if (tileTypeGen == 5)
+            {
+                this.tileType = gameObject.AddComponent<Flatlands>();
+                this.tileType.attachedTo = this;
+                isResource = true;
+            }
         }
     }
 
@@ -99,20 +124,100 @@ public class Tile : MonoBehaviour
     }
 
     // selectTile() used in gameplay for a player to select a Tile piece.
-    public void selectTile()
+
+
+    public TileType getTileType()
     {
-        if(tileType is ResourceTileType)
-        {
-            Debug.Log("Is resource type");
-            ResourceTileType temp = (ResourceTileType)tileType;
-            Debug.Log(temp.getResourceType());
-        }
-        Debug.Log(this.currentTileType);
+        return this.tileType;
     }
 
+    public Rover getRoverOn()
+    {
+        return this.roverOn;
+    }
     // onMouseDown() to provide input functionality
     private void OnMouseDown()
     {
-        selectTile();
+        gameHandler.setSelectedTile(this);
+        Debug.Log("Tile Clicked");
+    }
+    /*
+    public void claimTile()
+    {
+        if (tileType is ResourceTileType)
+        {
+            ResourceTileType tempRtt = (ResourceTileType)tileType;
+            int resourceTemp = tempRtt.getResourceAmount();
+
+            if (this.tileType is Mountain)
+            {
+                Mountain temp = (Mountain)tileType;
+                if (temp.claimTile(gameHandler.currentPlayer) == true)
+                {
+                    // change this Tile to mines with this mountains iron amount and update
+                    Barracks bTemp = (Barracks)tileType;
+                    bTemp.resourcesPerTurn = resourceTemp;
+                }
+                Debug.Log("Not Enough!");
+            }
+        }
+        //... continue if else tree for all resource types
+    }
+    */
+    public Sprite getTileSprite()
+    {
+        return this.tileType.getSprite();
+    }
+
+    public Player getTileOwner() 
+    {   
+        return this.tileOwner; 
+    }
+
+    public void setTileOwner(Player player)
+    {
+        this.tileOwner = player;
+    }
+
+    public string getTileOwnerName()
+    {
+        return this.tileOwnerName;
+    }
+
+    public string GetTileTypeName() 
+    {
+        return this.tileType.typeName;
+    }
+
+    public string getResourceType()
+    {
+        if (this.tileType is ResourceTileType)
+        {
+            ResourceTileType temp = (ResourceTileType)this.tileType;
+            return temp.getResourceType();
+        }
+        else if (this.tileType is GeneratorTileType)
+        {
+            GeneratorTileType temp = (GeneratorTileType)this.tileType;
+            return temp.getResourceType();
+        }
+        else
+            return null;
+    }
+
+    public int getResourceAmount()
+    {
+        if (this.tileType is ResourceTileType)
+        {
+            ResourceTileType temp = (ResourceTileType)this.tileType;
+            return temp.getResourceAmount();
+        }
+        else if (this.tileType is GeneratorTileType)
+        {
+            GeneratorTileType temp = (GeneratorTileType)this.tileType;
+            return temp.getResourceAmount();
+        }
+        else
+            return 0;
     }
 }
