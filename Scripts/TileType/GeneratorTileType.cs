@@ -26,7 +26,7 @@ public class GeneratorTileType : TileType
 
     void Awake()
     {
-
+        resourceType = "Troops";
     }
 
     public int getResourceAmount()

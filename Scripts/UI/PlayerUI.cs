@@ -9,30 +9,11 @@ public class PlayerUI : MonoBehaviour
     public GameHandler gameHandler;
     public SelectedTilePanel selectedTilePanel;
     public PlayerActionPanel playerActionPanel;
+    public CheckInfoPanel checkInfoPanel;
     public string playerShowingName;
 
     public Tile selectedTile;
     public Sprite selectedTileSprite;
-
-    // Start is called before the first frame update
-    void Awake()
-    {
-
-    }
-
-    private void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        //playerShowing = gameHandler.currentPlayer;
-        //playerShowingName = playerShowing.playerName;
-
-    }
 
     public void updateUI()
     {
@@ -44,7 +25,7 @@ public class PlayerUI : MonoBehaviour
     {
         selectedTile = gameHandler.getSelectedTile();
         selectedTileSprite = selectedTile.getTileSprite();
-        selectedTilePanel.tileOwnerField.SetText(selectedTile.getTileOwnerName());// change to owned player
+        selectedTilePanel.tileOwnerField.SetText(selectedTile.getTileOwnerName());
         selectedTilePanel.stu.selectedTileImage.GetComponent<Image>().sprite = gameHandler.getSelectedTileSprite();
     }
 }

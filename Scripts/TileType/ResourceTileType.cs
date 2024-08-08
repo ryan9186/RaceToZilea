@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,11 +22,14 @@ public class ResourceTileType : TileType
 {
     public int mobility = 2;
     public int resourceAmt;
+    public int health;
     public string resourceType = null;
+    public string buildCost;
 
     void Awake()
     {
         resourceAmt = GenerateResourceAmount();
+        this.attachedTo.tileResource = resourceAmt;
         //this.tileSprite = Resources.Load<Sprite>("FlatlandsSprite");
     }
 
@@ -45,9 +49,107 @@ public class ResourceTileType : TileType
     {
         return resourceType;
     }
-
-    Boolean claimTile()
+    
+    public void claimTile(Player player)
     {
-        return false;
+        this.attachedTo.setTileOwner(player);
+        player.tilesOwned.Add(this.attachedTo);
+        this.attachedTo.tileOwnerName = player.playerName;
+        this.health = 20;
+        if (this is Mountain)
+        {
+            player.ironPerTurn += this.resourceAmt;
+            this.typeName = "Mines";
+            this.tileSprite = Resources.Load<Sprite>("FissureSprite");
+            this.attachedTo.tileRenderer.sprite = this.tileSprite;
+        }
+        else if (this is Crater)
+        {
+            player.foodPerTurn += this.resourceAmt;
+            this.typeName = "Fishery";
+            this.tileSprite = Resources.Load<Sprite>("FissureSprite");
+            this.attachedTo.tileRenderer.sprite = this.tileSprite;
+
+        }
+        else if (this is Fissure)
+        {
+            player.lithiumPerTurn += this.resourceAmt;
+            this.typeName = "Lithium Elevator";
+            this.tileSprite = Resources.Load<Sprite>("FissureSprite");
+            this.attachedTo.tileRenderer.sprite = this.tileSprite;
+
+
+        }
+        else if (this is Flatlands)
+        {
+            player.troopsPerTurn += this.resourceAmt;
+            this.typeName = "Barracks";
+            this.tileSprite = Resources.Load<Sprite>("FissureSprite");
+            this.attachedTo.tileRenderer.sprite = this.tileSprite;
+
+
+        }
+        else if (this is Ravine)
+        {
+            player.oxygenPerTurn += this.resourceAmt;
+            this.typeName = "Oxygen Extractor";
+            this.tileSprite = Resources.Load<Sprite>("FissureSprite");
+            this.attachedTo.tileRenderer.sprite = this.tileSprite;
+        }
+    }
+
+    public void attackEnemyTile(Rover playerRover, Tile enemyTile)
+    {
+        ResourceTileType temp = enemyTile.tileType as ResourceTileType;
+        temp.health -= playerRover.troops;
+        playerRover.attacks -= 1;
+        if (temp.health <= 0)
+        {
+            temp.destroyGenerator();
+        }
+    }
+
+    public void destroyGenerator()
+    {
+        Player tempPlayer = this.attachedTo.tileOwner;
+        this.attachedTo.tileOwner.tilesOwned.Remove(this.attachedTo);
+        this.attachedTo.setTileOwner(null);
+        this.attachedTo.tileOwnerName = "Unowned";
+        if (this is Mountain)
+        {
+            tempPlayer.ironPerTurn -= this.resourceAmt;
+            this.typeName = "Mountain";
+            this.tileSprite = Resources.Load<Sprite>("MountainSprite");
+            this.attachedTo.tileRenderer.sprite = this.tileSprite;
+        }
+        else if (this is Crater)
+        {
+            tempPlayer.foodPerTurn += this.resourceAmt;
+            this.typeName = "Crater";
+            this.tileSprite = Resources.Load<Sprite>("CraterSprite");
+            this.attachedTo.tileRenderer.sprite = this.tileSprite;
+
+        }
+        else if (this is Fissure)
+        {
+            tempPlayer.lithiumPerTurn += this.resourceAmt;
+            this.typeName = "Fissure";
+            this.tileSprite = Resources.Load<Sprite>("FissureSprite");
+            this.attachedTo.tileRenderer.sprite = this.tileSprite;
+        }
+        else if (this is Flatlands)
+        {
+            tempPlayer.troopsPerTurn += this.resourceAmt;
+            this.typeName = "Flatlands";
+            this.tileSprite = Resources.Load<Sprite>("FlatlandsSprite");
+            this.attachedTo.tileRenderer.sprite = this.tileSprite;
+        }
+        else if (this is Ravine)
+        {
+            tempPlayer.oxygenPerTurn += this.resourceAmt;
+            this.typeName = "Ravine";
+            this.tileSprite = Resources.Load<Sprite>("RavineSprite");
+            this.attachedTo.tileRenderer.sprite = this.tileSprite;
+        }
     }
 }

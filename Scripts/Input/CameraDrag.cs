@@ -21,10 +21,7 @@ public class CameraDrag : MonoBehaviour
 
     private void Awake()
     {
-        //mainCamera = Camera.main;
         mainCamera = GetComponent<Camera>();
-
-        Debug.Log("Awake");
     }
 
 
@@ -32,9 +29,6 @@ public class CameraDrag : MonoBehaviour
     {
         if (ctx.started) origin = GetMousePosition;
         isDragging = ctx.started || ctx.performed;
-        //Debug.Log("Dragging");
-        //Debug.Log(origin);
-        //Debug.Log(difference);
     }
 
     public void LateUpdate()

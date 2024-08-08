@@ -58,6 +58,9 @@ public class GameHandler : MonoBehaviour
         currentPlayer = players[playersTurn];
         currentPlayer.isTurn = true;
         currentPlayerName = currentPlayer.playerName;
+        StartCoroutine(gameInializing());
+        selectedTile = currentPlayer.homeBase;
+        currentUI.playerActionPanel.updateActionPanel();
     }
 
     void Update()
@@ -73,6 +76,11 @@ public class GameHandler : MonoBehaviour
     public void playerEndTurn()
     {
         Debug.Log("PlayerEndTurn");
+        for (int i = 0; i < currentPlayer.roverOwned.Count; i++)
+        {
+            currentPlayer.roverOwned[i].moves = 2;
+        }
+
         currentPlayer.isTurn = false;
         turnCount++;
         nextTurn();
@@ -86,6 +94,21 @@ public class GameHandler : MonoBehaviour
         currentPlayer = players[playersTurn];
         currentPlayer.isTurn = true;
         currentPlayerName = currentPlayer.getPlayerName();
+        this.selectedTile = currentPlayer.homeBase;
+        if (currentPlayer.roverOwned.Count > 0)
+        {
+            selectedRover = currentPlayer.roverOwned[0];
+        }
+        else
+        {
+            selectedRover = null;
+        }
+        for(int i = 0; i < currentPlayer.roverOwned.Count; i++)
+        {
+            currentPlayer.roverOwned[i].attacks = 2;
+        }
+        currentUI.updateUI();
+        currentUI.checkInfoPanel.clearPanel();
     }
 
 
@@ -105,7 +128,13 @@ public class GameHandler : MonoBehaviour
         this.selectedTileType = selectedTile.GetTileTypeName();
         this.selectedTileResourceType = selectedTile.getResourceType();
         this.selectedTileResourceAmount = selectedTile.getResourceAmount();
-        currentUI.updateSelectedTilePanel();
+        //currentUI.updateSelectedTilePanel();
+        currentUI.updateUI();
+    }
+
+    public void setSelectedRover (Rover selectedRover)
+    {
+        this.selectedRover = selectedRover;
     }
 
     public Rover getSelectedRover()
@@ -113,7 +142,7 @@ public class GameHandler : MonoBehaviour
         return selectedRover;
     }
 
-    public void testFunction()
+    public void setupGame()
     {
         for (int i = 0; i < playersInGame; i++)
         {
@@ -123,16 +152,26 @@ public class GameHandler : MonoBehaviour
             homeBaseTiles[i].tileOwner = players[i];
             homeBaseTiles[i].setTileOwner(players[i]);
             homeBaseTiles[i].tileOwnerName = players[i].getPlayerName();
+            Vector3 homeBaseLoc = homeBaseTiles[i].transform.position;
+            GameObject newRover = Instantiate(roverPrefab, homeBaseLoc, transform.rotation);
+            newRover.GetComponent<Rover>().spawnRover(this, players[i]);
+            selectedTile = currentPlayer.homeBase;
+            selectedRover = currentPlayer.roverOwned[0];
         }
     }
 
     public void spawnRover()
     {
-        //GameObject go = Instantiate(this.Prefab, this.Position, this.Rotation);
-        //go.AddComponent<NPC>().Setup(this);
         Tile currentPlayerHomeBase = currentPlayer.homeBase;
         Vector3 homeBaseLoc = currentPlayerHomeBase.transform.position;
         GameObject newRover = Instantiate(roverPrefab, homeBaseLoc, transform.rotation);
-        newRover.GetComponent<Rover>().setupRover(this);
+        newRover.GetComponent<Rover>().spawnRover(this, currentPlayer);
+    }
+
+
+    IEnumerator gameInializing()
+    {
+        yield return new WaitForSeconds(0.1f);
+        setupGame();
     }
 }

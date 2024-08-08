@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -12,20 +13,50 @@ public class Rover : MonoBehaviour
 
     public int health = 10;
     public int troops = 5;
+    public int moves = 2;
+    public int attacks = 2;
 
-    public void setupRover(GameHandler gameHandler)
+    public void spawnRover(GameHandler gameHandler, Player player)
     {
         this.gameHandler = gameHandler;
-        this.roverOwner = gameHandler.currentPlayer;
-        this.tileOn = roverOwner.homeBase;
-        roverOwner.roverCount++;
+        this.roverOwner = player;
+        this.tileOn = player.homeBase;
+        this.tileOn.roverOn = this;
+        this.roverOwner.roverCount++;
         roverOwner.roverOwned.Add(this);
-        tileOn.roverOn = this;
+
+        /*
+        Tile currentPlayerHomeBase = currentPlayer.homeBase;
+        Vector3 homeBaseLoc = currentPlayerHomeBase.transform.position;
+        GameObject newRover= Instantiate(roverPrefab, homeBaseLoc, transform.rotation);
+        newRover.GetComponent<Rover>().setupRover(this);
+        */
     }
 
     public void moveRover(Tile tile)
     {
-        transform.position = Vector3.MoveTowards(transform.position, tile.transform.position, 100);
+        this.tileOn.roverOn = null;
+        this.tileOn = tile;
+        Vector3 movePosition = gameHandler.selectedTile.transform.position;
+        transform.position = Vector3.MoveTowards(transform.position, movePosition, 100);
+        tile.roverOn = this;
+        this.moves -= 1;
+    }
+
+    public void attackRover(Rover enemyRover)
+    {
+        enemyRover.health -= this.troops;
+        this.attacks -= 1;
+        if (enemyRover.health <= 0)
+        {
+            destroyRover(enemyRover);
+        }
+    }
+
+    public void destroyRover(Rover deadRover)
+    {
+        this.roverOwner.roverOwned.Remove(deadRover);
+        GameObject.Destroy(deadRover.gameObject);
     }
 
     public Player getRoverOwner()
@@ -39,6 +70,7 @@ public class Rover : MonoBehaviour
     }
     public void OnMouseDown()
     {
-        gameHandler.selectedRover = this;
+        if(this.roverOwner == gameHandler.currentPlayer)
+            gameHandler.setSelectedRover(this);
     }
 }

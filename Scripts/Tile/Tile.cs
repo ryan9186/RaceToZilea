@@ -26,6 +26,7 @@ using UnityEditor;
 public class Tile : MonoBehaviour
 {
     public GameHandler gameHandler;
+    //public GameObject tileGameObject;
     // This Tile piece's Sprite renderer
     public SpriteRenderer tileRenderer;
 
@@ -112,6 +113,7 @@ public class Tile : MonoBehaviour
                 isResource = true;
             }
         }
+        //tileGameObject = this.gameObject;
     }
 
     //updateTile function is used any time a Tile object's tileType changes, which

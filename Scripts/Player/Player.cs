@@ -20,19 +20,19 @@ public class Player : MonoBehaviour
     public Tile selectedTile = null;
 
 
-    public int troops = 0;
+    public int troops = 5;
     public int troopsPerTurn = 1;
 
-    public int food = 0;
+    public int food = 5;
     public int foodPerTurn = 1;
 
-    public int iron = 0;
+    public int iron = 5;
     public int ironPerTurn = 1;
 
-    public int lithium = 0;
+    public int lithium = 5;
     public int lithiumPerTurn = 1;
 
-    public int oxygen = 0;
+    public int oxygen = 5;
     public int oxygenPerTurn = 1;
 
     
