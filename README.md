@@ -4,16 +4,16 @@ Title: Race To Zilea
 
 Genre: Turn-based Strategy
 
-Game Objective
+Game Objective:
 In this strategy-based game, players compete to control resource-rich tiles, construct buildings, and deploy troops on a hexagonal map. The game is won by earning a certain number of victory points, which are gained through resource management, combat, and strategic expansion.
 
-Game Map
+Game Map:
 The game takes place on a hexagonal (hex) map, with each tile being a different tile type.
 
 Resource Tiles: These tiles start as 'desert' and can be terraformed into more hospitable environments. Different desert features correspond to available resources. 
 Each resource tile contains one or two resources with a maximum of 8 Resource Points (RP) that can be split between the resources. Only one building can be placed on each resource tile.
 
-Buildings
+Buildings:
 
 Home Base:
 Initial building placed at the start of the game.
@@ -30,7 +30,7 @@ Barracks:
 Enables the player to buy and deploy troops.
 Must be placed on a terraformed resource tile.
 
-Resources and Terraforming
+Resources and Terraforming:
 Terraforming: Converts a desert tile into a hospitable environment, making it possible to build on. Terraforming is relatively inexpensive but crucial for resource production.
 Resource Points (RP): Each resource tile provides RP based on the resources it contains. A resource camp can only harvest one type of resource per tile.
 Resource Types:
@@ -40,7 +40,7 @@ Lithium
 Oxygen
 At the start of each player's turn, they gain resources according to the RP of each resource camp they control.
 
-Units
+Units:
 
 Rovers:
 Can deploy and transport combat troops.
@@ -60,7 +60,7 @@ Fight: Both players secretly select the number of troops to commit. The player w
 The losing player moves their Rover back to their Home Base.
 The winner gains 1 victory point.
 
-Win Conditions
+Win Conditions:
 A player wins the game by gaining 11 victory points from combat battles.
 
 This game is currently still in development, and features or rules may change as we continue to refine gameplay mechanics. Your feedback is valuable as we aim to create a balanced and engaging strategy experience.
